@@ -3,21 +3,22 @@ const bookService = require("./book.service")
 const sendCustomResponse = require("../../../helpers/send-custom-response")
 
 //create book controller
-const createBookController = catchAsyncHandler(async(req, res, next) => {
+const createBookController = catchAsyncHandler(async(req, res) => {
     const book = await bookService.createBookService(req.body)
-    book ? sendCustomResponse(res, {
-        statusCode: 201,
+
+    sendCustomResponse(res, {
+        status: 201,
         success: true,
         message: "Book created successfully",
         data: book
-    }) : next()
+    })
 })
 
 //get books controller
-const getBooksController = catchAsyncHandler(async (req, res, next) => {
+const getBooksController = catchAsyncHandler(async (req, res) => {
     const {searchTerm, ...filters} = req.query
     const result = await bookService.getBooksService(filters, searchTerm)
-    result.books.length ? sendCustomResponse(res, {
+    sendCustomResponse(res, {
         status: 200,
         success: true,
         message: "Books retreived successfully",
@@ -27,44 +28,43 @@ const getBooksController = catchAsyncHandler(async (req, res, next) => {
             limit: Number(result.limit),
             totalPages: Math.ceil(result.totalBooks / Number(result.limit)),
         }
-    }) : next()
+    })
 
 })
 
 //get book controller
-const getBookByIdController = catchAsyncHandler(async(req, res, next) => {
+const getBookByIdController = catchAsyncHandler(async(req, res) => {
     const result = await bookService.getBookByIdService(req.params.id)
 
-    result ? sendCustomResponse(res, {
+    sendCustomResponse(res, {
         status: 200,
         success: true,
         message: "Book retreived successfully",
         data: result,
-    }) : next()
+    })
 })
 
 //update book controller
-const updateBookController = catchAsyncHandler(async(req, res, next) => {
+const updateBookController = catchAsyncHandler(async(req, res) => {
     const result = await bookService.updateBookService(req.params.id, req.body)
 
-    result ? sendCustomResponse(res, {
+    sendCustomResponse(res, {
         status: 200,
         success: true,
         message: "Book updated successfully",
         data: result,
-    }) : next()
+    })
 })
 
 //delete book controller
-const deleteBookController = catchAsyncHandler(async(req, res, next) => {
+const deleteBookController = catchAsyncHandler(async(req, res) => {
     const result = await bookService.deleteBookService(req.params.id)
-
-    result ? sendCustomResponse(res, {
+    sendCustomResponse(res, {
         status: 200,
         success: true,
         message: "Book deleted successfully",
         data: result,
-    }) : next()
+    })
 })
 
 module.exports = {

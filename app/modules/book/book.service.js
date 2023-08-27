@@ -1,12 +1,12 @@
 const Book = require("./book.model")
 const {searchableFields, filterableOptions} = require("./book.constants");
+const ApiError = require("../../../errors/ApiError")
 
 
 //create new book
 const createBookService = async (payload) => {
     const book = new Book(payload);
-    await book.save();
-    return book;
+    return await book.save();
 }
 
 //get books
@@ -87,6 +87,8 @@ const updateBookService = async(id, payload) => {
 
 //delete book service
 const deleteBookService = async(id) =>{
+    const isExist = await Book.findBookById(id);
+    if(!isExist) throw new ApiError(404, 'Book not found')
     const res = await Book.findByIdAndDelete({_id: id})
     return res;
 }

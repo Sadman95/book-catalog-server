@@ -32,12 +32,15 @@ const bookSchema = new Schema({
         timestamps: true,
     })
 
-bookSchema.pre("save", async function(next){
+bookSchema.pre("save", async function(){
     const existBook = await Book.findOne({title: this.title});
     if (existBook){
         throw new ApiError(409, "Book already exists")
     }
-    next()
+})
+
+bookSchema.static("findBookById", async function(id){
+    return Book.findById(id);
 })
 
 const Book = model("Book", bookSchema)
