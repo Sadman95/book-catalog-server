@@ -1,5 +1,6 @@
 const {Schema, model} = require("mongoose")
 const buffer = require("buffer");
+const ApiError = require("../../../errors/ApiError")
 
 const bookSchema = new Schema({
     title: {
@@ -33,12 +34,10 @@ const bookSchema = new Schema({
 
 bookSchema.pre("save", async function(next){
     const existBook = await Book.findOne({title: this.title});
-    console.log('exist: ', existBook)
     if (existBook){
-        const error = new Error("Book already exists")
-        error.status = 409
-        next(error)
+        throw new ApiError(409, "Book already exists")
     }
+    next()
 })
 
 const Book = model("Book", bookSchema)
