@@ -1,6 +1,5 @@
 const Book = require("./book.model")
 const {searchableFields, filterableOptions} = require("./book.constants");
-const generateRangeArray = require("../../../utils/generate-range-array")
 
 
 //create new book
@@ -15,7 +14,6 @@ const getBooksService = async (filters, searchTerm) => {
     const {page = 1, limit = 10, ...filterableFields} = filters;
     const skip = limit * (Number(page) - 1)
     let andConditions = [];
-    // console.log(filterableFields)
 
     if(searchTerm){
         andConditions.push({
@@ -32,7 +30,6 @@ const getBooksService = async (filters, searchTerm) => {
 
     if(Object.keys(filterableFields).length){
         for (const key in filterableFields) {
-            console.log(key, filterableFields[key]);
 
             if(key && filterableFields[key]){
                 if(key === 'publicationYear'){
@@ -50,11 +47,8 @@ const getBooksService = async (filters, searchTerm) => {
             }
         }
     }
-    console.log({
-        len:andConditions.length
-    })
+
     const whereCondition = andConditions.length > 0 ? {$and: andConditions} : {}
-    console.log('whereCondition: ', whereCondition);
 
     const books = await Book.find(whereCondition).sort({createdAt: -1}).skip(skip).limit(limit)
     const totalBooks = await Book.countDocuments()
@@ -74,8 +68,6 @@ const getBooksService = async (filters, searchTerm) => {
         page,
         limit,
         totalBooks,
-        genres: genres.sort(),
-        years: generateRangeArray(years),
     };
 }
 

@@ -1,7 +1,6 @@
 const catchAsyncHandler = require("../../../helpers/catch-async-handler")
 const bookService = require("./book.service")
 const sendCustomResponse = require("../../../helpers/send-custom-response")
-const {filterableOptions} = require("./book.constants");
 
 //create book controller
 const createBookController = catchAsyncHandler(async(req, res, next) => {
@@ -27,8 +26,6 @@ const getBooksController = catchAsyncHandler(async (req, res, next) => {
             page: Number(result.page),
             limit: Number(result.limit),
             totalPages: Math.ceil(result.totalBooks / Number(result.limit)),
-            genres: result.genres,
-            years: result.years
         }
     }) : next()
 
