@@ -39,8 +39,12 @@ bookSchema.pre("save", async function(){
     }
 })
 
-bookSchema.static("findBookById", async function(id){
-    return Book.findById(id);
+bookSchema.static("findBookByProperty", async function(key, value){
+    if(key === "_id"){
+        return Book.findById(value);
+    }else{
+        return Book.findOne({[key]: value})
+    }
 })
 
 const Book = model("Book", bookSchema)
