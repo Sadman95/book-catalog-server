@@ -79,6 +79,8 @@ const getBookByIdService = async(id) => {
 
 //update book service
 const updateBookService = async(id, payload) => {
+    const isExist = await Book.findBookByProperty("_id", id);
+    if(!isExist) throw new ApiError(404, 'Book not found')
     const res = await Book.findByIdAndUpdate({_id: id}, payload, {
         new: true,
     })
@@ -87,7 +89,7 @@ const updateBookService = async(id, payload) => {
 
 //delete book service
 const deleteBookService = async(id) =>{
-    const isExist = await Book.findBookById(id);
+    const isExist = await Book.findBookByProperty("_id", id);
     if(!isExist) throw new ApiError(404, 'Book not found')
     const res = await Book.findByIdAndDelete({_id: id})
     return res;

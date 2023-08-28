@@ -47,7 +47,6 @@ const getBookByIdController = catchAsyncHandler(async(req, res) => {
 //update book controller
 const updateBookController = catchAsyncHandler(async(req, res) => {
     const result = await bookService.updateBookService(req.params.id, req.body)
-
     sendCustomResponse(res, {
         status: 200,
         success: true,
