@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const config = require('../../../config/index')
+const ApiError = require('../../../errors/ApiError')
 
 class JwtService{
     constructor(){};
@@ -11,7 +12,7 @@ class JwtService{
     }
 
     async verifyToken(token){
-        const decoded = await jwt.verify(token);
+        const decoded = await jwt.decode(token);
         return decoded;
     }
 }

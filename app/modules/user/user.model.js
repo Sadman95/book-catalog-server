@@ -31,8 +31,12 @@ const userSchema = new Schema({
 
     },
     {
-        timestamps: true,
+        toJSON: { virtuals: true }
     })
+
+userSchema.virtual('username').get(function() {
+    return `${this.firstName} ${this.lastName}`;
+});
 
 userSchema.pre("save", async function(next){
     const user = this;
@@ -50,12 +54,16 @@ userSchema.methods.isPasswordMatch = async function(givenPassword, savedPassword
         return await bcrypt.compare(givenPassword, savedPassword);
 
 }
-userSchema.methods.isUserExists = async function(email){
-        const user = await User.findOne(
-            {email: email},
+userSchema.methods.isUserExists = async function(key, value){
+    if(key == '_id'){
+        return User.findById(
+            {_id: value},
         ).lean();
-        return user;
-
+    }else{
+        return User.findOne(
+            {[key]: value},
+        ).lean();
+    }
 };
 
 

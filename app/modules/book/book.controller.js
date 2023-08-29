@@ -66,10 +66,29 @@ const deleteBookController = catchAsyncHandler(async(req, res) => {
     })
 })
 
+//post review controller
+const postReviewController = catchAsyncHandler(async(req, res) => {
+    const {id} = req.params;
+    const {comment} = req.body;
+    const payload = {
+        id,
+        comment,
+        user: req.user
+    }
+    const result = await bookService.postReviewService(payload)
+    sendCustomResponse(res, {
+        status: 201,
+        success: true,
+        message: 'Review added',
+        data: result
+    })
+})
+
 module.exports = {
     createBookController,
     getBooksController,
     getBookByIdController,
     updateBookController,
-    deleteBookController
+    deleteBookController,
+    postReviewController
 }
