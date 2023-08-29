@@ -1,6 +1,7 @@
 const Book = require("./book.model")
 const {searchableFields, filterableOptions} = require("./book.constants");
 const ApiError = require("../../../errors/ApiError")
+const User = require("../../modules/user/user.model")
 
 
 //create new book
@@ -73,7 +74,12 @@ const getBooksService = async (filters, searchTerm) => {
 
 //get book by _id
 const getBookByIdService = async(id) => {
-    const book = await Book.findById(id)
+    const book = await Book.findById(id).populate({
+        path: 'reviews.user',
+        model: 'User',
+        select: 'firstName lastName username _id',
+    })
+
     return book;
 }
 
@@ -95,10 +101,31 @@ const deleteBookService = async(id) =>{
     return res;
 }
 
+//add review service
+const postReviewService = async(payload) => {
+    const isExist = await Book.findBookByProperty("_id", payload.id);
+    if(!isExist) throw new ApiError(404, 'Book not found')
+    const user = await new User();
+    //TODO: user find by payload.user.email//
+    const exist = await user.isUserExists("email", payload.user.email);
+    if(!exist) {
+        throw new ApiError(404, "User doesn't exist")
+    }
+
+    const res = await Book.findByIdAndUpdate({_id: payload.id}, {
+        $push: { reviews: {
+            comment: payload.comment,
+            user: exist._id
+            } }
+    }, {new: true});
+    return res;
+}
+
 module.exports = {
     createBookService,
     getBooksService,
     getBookByIdService,
     updateBookService,
-    deleteBookService
+    deleteBookService,
+    postReviewService
 }

@@ -26,6 +26,15 @@ const bookSchema = new Schema({
         type: String,
         contentType: buffer,
         data: String
+    },
+    reviews: {
+      type: [{
+          comment: String,
+          user: {
+              type: Schema.Types.ObjectId,
+              ref: "User"
+          }
+      }]
     }
 },
     {
