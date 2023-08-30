@@ -52,6 +52,9 @@ const getBooksService = async (filters, searchTerm) => {
     const whereCondition = andConditions.length > 0 ? {$and: andConditions} : {}
 
     const books = await Book.find(whereCondition).sort({createdAt: -1}).skip(skip).limit(limit)
+    if(!books.length) {
+        throw new ApiError(404, "No books found")
+    }
     const totalBooks = await Book.countDocuments()
 
     const arra = await Book.aggregate([
