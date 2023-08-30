@@ -3,11 +3,9 @@ const webApp = express();
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const errorHandler = require("./error");
-const morgan = require('morgan');
 const routes = require('./routes/index');
 
 webApp.use(cors());
-webApp.use(morgan("dev"));
 webApp.use(express.json());
 webApp.use(express.urlencoded({ extended: true}));
 webApp.use(bodyparser.json());
