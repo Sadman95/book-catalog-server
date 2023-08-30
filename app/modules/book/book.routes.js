@@ -4,11 +4,11 @@ const {verifyAuth} = require("../auth/auth.middleware")
 
 router
     .get("/:id", booksController.getBookByIdController)
-    .patch("/:id", booksController.updateBookController)
-    .delete("/:id", booksController.deleteBookController)
+    .patch("/:id", verifyAuth, booksController.updateBookController)
+    .delete("/:id", verifyAuth, booksController.deleteBookController)
     .patch("/:id/reviews", verifyAuth , booksController.postReviewController)
     .get("/", booksController.getBooksController)
-    .post("/", booksController.createBookController)
+    .post("/", verifyAuth, booksController.createBookController)
 
 
 
