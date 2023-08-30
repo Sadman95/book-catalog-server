@@ -11,6 +11,10 @@ webApp.use(express.urlencoded({ extended: true}));
 webApp.use(bodyparser.json());
 webApp.use(bodyparser.urlencoded({ extended: true}));
 
+webApp.get("/", (_req, res) => {
+    res.send(`<p>Welcome</p><a href="https://book-catalog-server-7idg.onrender.com/api/v1/books">GET BOOKS</a>`)
+})
+
 webApp.use("/api/v1", routes)
 
 webApp.use(errorHandler.localErrorHandler)
