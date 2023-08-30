@@ -66,7 +66,6 @@ const getBooksService = async (filters, searchTerm) => {
             }
         }
     ])
-    const {genres, years} = arra[0]
     return {
         books,
         page,
